@@ -13,9 +13,7 @@ const Products = () => {
     console.log("fff", loading)
     const dispatch = useDispatch()
     useEffect(() => {
-
         fetchProduct()
-
     }, [])
 
     const fetchProduct = async () => {
@@ -35,20 +33,21 @@ const Products = () => {
             console.log("ddddd", result)
         }
         catch (error) {
+            console.log("error:",error)
             dispatch(productError(error))
         }
     }
 
-    console.log("product___", product.productReducer)
+    console.log("product___", product)
 
     return (
         <div className="container" style={{ marginTop: '65px', textAlign: 'start' }} >
 
-            {!loading ?
+            {loading === false ?
                 <Container>
                     <Row xs={2} md={4} lg={6} >
                         {
-                            product ? product.products.map((el,index)=>{
+                            product ? product?.products.map((el,index)=>{
                                 return <Card   style={{ width: '18rem', margin:'10px' }}  >
                                 <Card.Img variant="top" src={el.images[0]} />
                                 <Card.Body>
@@ -70,6 +69,7 @@ const Products = () => {
 
             }
         </div>
+        
     )
 }
 
