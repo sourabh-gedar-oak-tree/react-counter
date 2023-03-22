@@ -2,24 +2,29 @@ import React, { useEffect } from "react"
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
-import {productFecthing , productFetched , productError} from '../redux/action/productFetchAction'
-import {useDispatch, useSelector} from 'react-redux'
+import Container from 'react-bootstrap/Container';
+import { productFecthing, productFetched, productError } from '../redux/action/productFetchAction'
+import { useDispatch, useSelector } from 'react-redux'
+import { RiseLoader } from 'react-spinners'
 const Products = () => {
 
-    const product = useSelector(state=>state)
+    const product = useSelector(state => state.productReducer.items)
+    const loading = useSelector(state => state.productReducer.loading )
+    console.log("fff", loading)
     const dispatch = useDispatch()
     useEffect(() => {
-      
+
         fetchProduct()
-        
+
     }, [])
 
-    const fetchProduct = async () =>{
-        
-        try{
-            let data = await  fetch('https://dummyjson.com/products/1')
+    const fetchProduct = async () => {
+
+        try {
+            dispatch(productFecthing("data fetching"))
+            let data = await fetch('https://dummyjson.com/products')
             let result = await data.json()
-            console.log('dasf',data.status)
+            console.log('dasf', data.status)
             dispatch(productFetched(result))
 
             // if(data === 200){
@@ -27,29 +32,43 @@ const Products = () => {
             // }else{
             // dispatch(productFecthing("data fetching"))
             // }
-            console.log("ddddd",result)
+            console.log("ddddd", result)
         }
-        catch(error){
+        catch (error) {
             dispatch(productError(error))
         }
     }
 
-    console.log("product___",product.productReducer)
+    console.log("product___", product.productReducer)
 
     return (
-        <div className="container" style={{ marginTop: '65px' }} >
+        <div className="container" style={{ marginTop: '65px', textAlign: 'start' }} >
 
-            <Card style={{ width: '18rem', }}>
-                <Card.Img variant="top" src="https://assets.impactpool.org/logos/im-individuell-mnniskohjlp-0b534e5e-b6b8-4100-828f-a5682e0ed50d.svg" />
-                <Card.Body>
-                    <Card.Title>Card Title</Card.Title>
-                    <Card.Text>
-                        Some quick example text to build on the card title and make up the
-                        bulk of the card's content.
-                    </Card.Text>
-                    <Button variant="primary">Go somewhere</Button>
-                </Card.Body>
-            </Card>
+            {!loading ?
+                <Container>
+                    <Row xs={2} md={4} lg={6} >
+                        {
+                            product ? product.products.map((el,index)=>{
+                                return <Card   style={{ width: '18rem', margin:'10px' }}  >
+                                <Card.Img variant="top" src={el.images[0]} />
+                                <Card.Body>
+    
+                                    <Card.Title>{el.title}</Card.Title>
+                                    <Card.Text>
+                                        {el.description}
+                                    </Card.Text>
+                                    <Button variant="primary">Go somewhere</Button>
+                                </Card.Body>
+                            </Card>
+                            }):"no data found"
+                        }
+                      
+                    </Row>
+
+                </Container>
+                : <div style={{ textAlign: 'center', marginTop: '330px' }} ><RiseLoader color="hsla(3, 0%, 0%, 1)" size={30} /> </div>
+
+            }
         </div>
     )
 }

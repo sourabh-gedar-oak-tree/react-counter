@@ -18,8 +18,8 @@ export const counterReducer = (state={count:0},action) =>{
 
 
 export const productReducer =  (state={ items:[]} , action) =>{
-    console.log("reducer payload:",action)
-    
+  
+
     switch (action.type) {
         case actionTypes.PRODUCT_DATA_FATCHING:
             return{ loading:true , items:[] }

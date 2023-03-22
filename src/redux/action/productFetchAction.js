@@ -8,7 +8,7 @@ export const productFecthing = (payload) =>{
 }
 
 export const productFetched = (payload) =>{
-    console.log("productAction",payload)
+ 
     return{
 
         type:actionTypes.PRODUCT_DATA_SUCCESS,
